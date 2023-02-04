@@ -6,7 +6,7 @@
 #include <sys/times.h>
 #include <sys/resource.h>
 
-int print_real_time(clock_t end_time, clock_t start_time){
+void print_real_time(clock_t end_time, clock_t start_time){
     int delta = end_time - start_time;
     int r_usec = delta%100;
     int r_sec = delta/100;
@@ -18,7 +18,7 @@ int print_real_time(clock_t end_time, clock_t start_time){
     printf("\nreal\t%dm%d.%03ds\n", r_m, r_sec, r_usec);
 }
 
-int print_time(char* type, long tv_sec, long tv_usec){
+void print_time(char* type, long tv_sec, long tv_usec){
     int usecs, secs, mins = 0;
 
     usecs = tv_usec/1000;
@@ -33,8 +33,7 @@ int print_time(char* type, long tv_sec, long tv_usec){
         secs %= 60;
     }
     printf("%s\t%dm%d.%03ds\n", type, mins, secs, usecs);
-    // else printf("%s %dm%d.%03ds\n", type, mins, secs, usecs);
-    
+    // else printf("%s %dm%d.%03ds\n", type, mins, secs, usecs); 
 }
 
 int main(int argc, char *argv[]) {
