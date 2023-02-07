@@ -38,7 +38,6 @@ void print_time(char *type, long tv_sec, long tv_usec)
         secs %= 60;
     }
     printf("%s\t%dm%d.%03ds\n", type, mins, secs, usecs);
-    // else printf("%s %dm%d.%03ds\n", type, mins, secs, usecs);
 }
 
 int main(int argc, char *argv[])
@@ -52,11 +51,6 @@ int main(int argc, char *argv[])
     struct rusage usage;
 
     start = times(&tms_start);
-
-    // if (argc < 2) {
-    //     fprintf(stderr, "Usage: %s cmd [arguments]\n", argv[0]);
-    //     return 1;
-    // }
 
     pid = fork();
 
