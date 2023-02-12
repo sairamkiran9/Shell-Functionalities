@@ -16,13 +16,14 @@ void print_mtimes(time_t mytime, int mtimes[])
     // Update current time to 24hrs back
     mytime_info->tm_hour -= 24;
     mytime = mktime(mytime_info);
+    int idx = mytime_info->tm_hour;
 
     // Iterate recursively and print number of files modified from the last 24hrs
     for (int i = 0; i < 24; i++)
     {
         // Using strftime to modify timestamp format as required
         strftime(mytime_str, sizeof(mytime_str), "%a %b %d %H:%M:%S %Y", mytime_info);
-        printf("%s: %d\n", mytime_str, mtimes[mytime_info->tm_hour]);
+        printf("%s: %d\n", mytime_str, mtimes[(idx + i + 1) % 24]);
 
         // Increment current time by 1hr for each iteration
         mytime_info->tm_hour += 1;
@@ -49,7 +50,9 @@ void get_mtimes(const char *dir, int *mtimes, time_t current_time)
     {
         snprintf(path, sizeof(path), "%s/%s", dir, entry->d_name);
         // Check if the entry is a directory
-        if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        if (entry->d_type == DT_DIR &&
+            strcmp(entry->d_name, ".") != 0 &&
+            strcmp(entry->d_name, "..") != 0)
         {
             // snprintf(path, sizeof(path), "%s/%s", dir, entry->d_name);
             get_mtimes(path, mtimes, current_time);
@@ -64,9 +67,10 @@ void get_mtimes(const char *dir, int *mtimes, time_t current_time)
                 return;
             }
             file_mtime = stat_buf.st_mtime;
+            int time_diff = difftime(current_time, file_mtime);
 
             // Check if the file was modified in the past 24 hours
-            if (DEFAULT_TIME >= difftime(current_time, file_mtime))
+            if (DEFAULT_TIME >= time_diff)
             {
                 time_info = localtime(&file_mtime);
                 mtimes[time_info->tm_hour] += 1;
@@ -79,10 +83,10 @@ void get_mtimes(const char *dir, int *mtimes, time_t current_time)
 
 int main(int argc, char *argv[])
 {
-    char *dir = ".";            // default path  
+    char *dir = ".";
     int mtimes[24] = {0};
 
-    // Check for directory
+    // Check if a directory path was provided as an argument
     if (argc == 2)
     {
         dir = argv[1];
