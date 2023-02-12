@@ -16,13 +16,13 @@ void print_tree(char *d_name, int depth)
     printf("%s%s\n", "|-- ", d_name);
 }
 
-int print_dir_tree(char *prev_path, char *path, int depth)
+int print_dir_tree(char *prev_path, char *path, int depth, char *prefix)
 {
     int n;
     struct dirent **namelist;
     char new_path[4096], *next_prefix, *segment;
     strcpy(new_path, prev_path);
-    
+
     if ((strcmp(prev_path, "") != 0) &&
         (strcmp(prev_path, "./") != 0) &&
         (strcmp(prev_path, "../") != 0))
@@ -47,20 +47,21 @@ int print_dir_tree(char *prev_path, char *path, int depth)
             free(namelist[n]);
             continue;
         }
-        // if (n == 2)
-        //     segment = "    ";
-        // else
-        //     segment = "|   ";
-        // next_prefix = malloc(strlen(prefix) + strlen(segment) + 1);
-        // sprintf(next_prefix, "%s%s", prefix, segment);
 
-        print_tree(namelist[n]->d_name, depth);
-
+        // print_tree(namelist[n]->d_name, depth);
+        printf("%s%s%s\n", prefix, "|-- ", namelist[n]->d_name);
         if (namelist[n]->d_type == DT_DIR)
         {
             dir_count++;
 
-            print_dir_tree(new_path, namelist[n]->d_name, depth + 1);
+            if (n == 2)
+                segment = "    ";
+            else
+                segment = "|   ";
+
+            next_prefix = malloc(strlen(prefix) + strlen(segment) + 1);
+            sprintf(next_prefix, "%s%s", prefix, segment);
+            print_dir_tree(new_path, namelist[n]->d_name, depth + 1, next_prefix);
         }
         else
         {
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
     }
 
     printf("%s\n", dir);
-    print_dir_tree("", dir, 0);
+    print_dir_tree("", dir, 0, "");
 
     printf("\n%ld directories, %ld files\n", dir_count, file_count);
 
