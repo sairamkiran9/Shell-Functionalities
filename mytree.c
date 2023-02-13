@@ -8,7 +8,7 @@ static long file_count = 0;
 
 int print_dir_tree(char *prev_path, char *path, char *branch)
 {
-    int n;
+    int n, idx = 0;
     struct dirent **namelist;
     char new_path[4096], *next_branch, *segment;
     strcpy(new_path, prev_path);
@@ -33,23 +33,24 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
         return 0;
     }
 
-    while (n--)
+    while (idx < n)
     {
         /* ignore . files */
-        if (strncmp(namelist[n]->d_name, ".", 1) == 0)
+        if (strncmp(namelist[idx]->d_name, ".", 1) == 0)
         {
-            free(namelist[n]);
+            free(namelist[idx]);
+            idx++;
             continue;
         }
 
-        printf("%s%s%s\n", branch, "|-- ", namelist[n]->d_name);
+        printf("%s%s%s\n", branch, "|-- ", namelist[idx]->d_name);
         /* Check if the entry is a directory */
-        if (namelist[n]->d_type == DT_DIR)
+        if (namelist[idx]->d_type == DT_DIR)
         {
             dir_count++;
 
             /* check for next prefix */
-            if (n == 2)
+            if (idx == n - 1)
             {
                 segment = "    ";
             }
@@ -61,15 +62,16 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
             /* update prefix branch */
             next_branch = malloc(strlen(branch) + strlen(segment) + 1);
             sprintf(next_branch, "%s%s", branch, segment);
-            print_dir_tree(new_path, namelist[n]->d_name, next_branch);
+            print_dir_tree(new_path, namelist[idx]->d_name, next_branch);
             free(next_branch);
         }
         /* Check if the entry is a regular file */
-        else if (namelist[n]->d_type == DT_REG)
+        else if (namelist[idx]->d_type == DT_REG)
         {
             file_count++;
         }
-        free(namelist[n]);
+        free(namelist[idx]);
+        idx++;
     }
 
     free(namelist);
