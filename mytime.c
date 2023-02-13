@@ -46,12 +46,13 @@ int main(int argc, char *argv[])
     pid_t pid;
 
     clock_t start, end;
+    struct rusage info;
     struct tms tms_start, tms_end;
 
-    struct rusage usage;
-
+    /* Capture start time */
     start = times(&tms_start);
 
+    /* State child process */
     pid = fork();
 
     if (pid < 0)
@@ -61,19 +62,24 @@ int main(int argc, char *argv[])
     }
     else if (pid == 0)
     {
+        /* Execute linux command */
         execvp(argv[1], &argv[1]);
         fprintf(stderr, "%s command not found\n", argv[1]);
         exit(1);
     }
     else
     {
-        wait4(pid, &status, 0, &usage);
+        /* Wait for child process to terminate */
+        wait4(pid, &status, 0, &info);
     }
 
+    /* Capture end time */
     end = times(&tms_end);
 
+    /* Print all times */
     print_real_time(end, start);
-    print_time("user", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
-    print_time("sys", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec);
+    print_time("user", info.ru_utime.tv_sec, info.ru_utime.tv_usec);
+    print_time("sys", info.ru_stime.tv_sec, info.ru_stime.tv_usec);
+
     return 0;
 }

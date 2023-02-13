@@ -22,16 +22,20 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
 
     strcat(new_path, path);
 
+    /**
+     * fetch all files and directories to an array is sorted format
+     */
     n = scandir(new_path, &namelist, NULL, alphasort);
 
     if (n == -1)
     {
-        perror("scandir");
+        perror("failed scandir");
         return 0;
     }
 
     while (n--)
     {
+        /* ignore . files */
         if (strncmp(namelist[n]->d_name, ".", 1) == 0)
         {
             free(namelist[n]);
@@ -39,10 +43,12 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
         }
 
         printf("%s%s%s\n", branch, "|-- ", namelist[n]->d_name);
+        /* Check if the entry is a directory */
         if (namelist[n]->d_type == DT_DIR)
         {
             dir_count++;
 
+            /* check for next prefix */
             if (n == 2)
             {
                 segment = "    ";
@@ -51,13 +57,15 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
             {
                 segment = "|   ";
             }
-            
+
+            /* update prefix branch */
             next_branch = malloc(strlen(branch) + strlen(segment) + 1);
             sprintf(next_branch, "%s%s", branch, segment);
             print_dir_tree(new_path, namelist[n]->d_name, next_branch);
             free(next_branch);
         }
-        else
+        /* Check if the entry is a regular file */
+        else if (namelist[n]->d_type == DT_REG)
         {
             file_count++;
         }
@@ -81,6 +89,7 @@ int main(int argc, char *argv[])
     printf("%s\n", dir);
     print_dir_tree("", dir, "");
 
+    /* Print total number of files and directories */
     printf("\n%ld directories, %ld files\n", dir_count, file_count);
 
     return 0;
