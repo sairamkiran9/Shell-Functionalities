@@ -8,10 +8,10 @@ shell:
 	$(CC) $(CFLAGS) mytime.c -o mytime.x
 	$(CC) $(CFLAGS) mymtimes.c -o mymtimes.x
 
-# command to get and individual binary file
+# Compiles and produces individual binary file
 %:  %.c
 	$(CC) $(CFLAGS) $< -o $@.x
 
-# removes (cleans) executables
+# Removes (cleans) all binaries with .x extension
 clean:
 	rm -rf *.x
