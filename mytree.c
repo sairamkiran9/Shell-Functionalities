@@ -38,7 +38,7 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
 
     if (n == -1)
     {
-        perror("failed scandir");
+        perror("failed to execute scandir");
         return 0;
     }
 
@@ -95,6 +95,10 @@ int main(int argc, char *argv[])
     if (argc == 2)
     {
         dir = argv[1];
+    }
+    else if (argc > 3)
+    {
+        perror("Invalid input: Usage ./mytree.x [dir]");
     }
 
     printf("%s\n", dir);

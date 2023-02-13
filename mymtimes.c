@@ -98,6 +98,10 @@ int main(int argc, char *argv[])
     {
         dir = argv[1];
     }
+    else if (argc > 3)
+    {
+        perror("Invalid input: Usage ./mytree.x [dir]");
+    }
 
     /* Fetch current local time */
     time_t current_time;
