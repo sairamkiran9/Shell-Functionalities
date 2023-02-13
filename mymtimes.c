@@ -1,3 +1,7 @@
+/**
+ * This program prints the total count of all files modified in last 24 hours.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

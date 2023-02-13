@@ -1,3 +1,7 @@
+/**
+ * This program works similar to time command in Unix.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -8,10 +12,14 @@
 
 void print_real_time(clock_t end_time, clock_t start_time)
 {
+    /**
+     * This method prints the total time to execute the program
+     */
     int delta = end_time - start_time;
     int r_usec = delta % 100;
     int r_sec = delta / 100;
     int r_m = 0;
+    /* Update secs and minutes */
     if (r_sec >= 60)
     {
         r_m = r_sec / 60;
@@ -22,16 +30,20 @@ void print_real_time(clock_t end_time, clock_t start_time)
 
 void print_time(char *type, long tv_sec, long tv_usec)
 {
+    /**
+     * This method prints the time to taken by the user and system to execute the program
+     */
     int usecs, secs, mins = 0;
 
     usecs = tv_usec / 1000;
     secs = tv_sec;
-
+    /* Update secs and micro secs */
     if (usecs >= 1000)
     {
         secs = usecs / 1000;
         usecs %= 1000;
     }
+    /* Update secs and minutes */
     if (secs >= 60)
     {
         mins = secs / 60;

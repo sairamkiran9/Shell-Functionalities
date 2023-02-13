@@ -1,3 +1,9 @@
+/**
+ * This method walk's recursively through all the
+ * parent and child directories and prints the output
+ * similar to Unix tree command
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +14,9 @@ static long file_count = 0;
 
 int print_dir_tree(char *prev_path, char *path, char *branch)
 {
+    /**
+     * Recursive method which crawl's through sub-directories
+     */
     int n, idx = 0;
     struct dirent **namelist;
     char new_path[4096], *next_branch, *segment;
