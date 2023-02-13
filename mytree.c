@@ -6,7 +6,7 @@
 static long dir_count = 0;
 static long file_count = 0;
 
-int print_dir_tree(char *prev_path, char *path, int depth, char *branch)
+int print_dir_tree(char *prev_path, char *path, char *branch)
 {
     int n;
     struct dirent **namelist;
@@ -44,13 +44,17 @@ int print_dir_tree(char *prev_path, char *path, int depth, char *branch)
             dir_count++;
 
             if (n == 2)
+            {
                 segment = "    ";
+            }
             else
+            {
                 segment = "|   ";
-
+            }
+            
             next_branch = malloc(strlen(branch) + strlen(segment) + 1);
             sprintf(next_branch, "%s%s", branch, segment);
-            print_dir_tree(new_path, namelist[n]->d_name, depth + 1, next_branch);
+            print_dir_tree(new_path, namelist[n]->d_name, next_branch);
             free(next_branch);
         }
         else
@@ -75,7 +79,7 @@ int main(int argc, char *argv[])
     }
 
     printf("%s\n", dir);
-    print_dir_tree("", dir, 0, "");
+    print_dir_tree("", dir, "");
 
     printf("\n%ld directories, %ld files\n", dir_count, file_count);
 

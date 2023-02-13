@@ -13,7 +13,7 @@ void print_mtimes(time_t mytime, int mtimes[])
     /**
      * This method prints number files modifed for every hour from past 24 hrs.
      */
-    char mytime_str[64];
+    char mytime_str[32];
     struct tm *mytime_info;
 
     mytime_info = localtime(&mytime);
@@ -69,6 +69,7 @@ void get_mtimes(const char *dir, int *mtimes, time_t current_time)
                 closedir(directory);
                 return;
             }
+
             file_mtime = stat_buf.st_mtime;
             int time_diff = (current_time - file_mtime) / DEFAULT_SECS;
 
