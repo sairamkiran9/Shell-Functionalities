@@ -9,9 +9,6 @@
 #include <string.h>
 #include <dirent.h>
 
-static long dir_count = 0;
-static long file_count = 0;
-
 int print_dir_tree(char *prev_path, char *path, char *branch)
 {
     /**
@@ -53,11 +50,10 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
         }
 
         printf("%s%s%s\n", branch, "|-- ", namelist[idx]->d_name);
+
         /* Check if the entry is a directory */
         if (namelist[idx]->d_type == DT_DIR)
         {
-            dir_count++;
-
             /* check for next prefix */
             if (idx == n - 1)
             {
@@ -74,11 +70,7 @@ int print_dir_tree(char *prev_path, char *path, char *branch)
             print_dir_tree(new_path, namelist[idx]->d_name, next_branch);
             free(next_branch);
         }
-        /* Check if the entry is a regular file */
-        else if (namelist[idx]->d_type == DT_REG)
-        {
-            file_count++;
-        }
+
         free(namelist[idx]);
         idx++;
     }
@@ -103,9 +95,6 @@ int main(int argc, char *argv[])
 
     printf("%s\n", dir);
     print_dir_tree("", dir, "");
-
-    /* Print total number of files and directories */
-    printf("\n%ld directories, %ld files\n", dir_count, file_count);
 
     return 0;
 }
