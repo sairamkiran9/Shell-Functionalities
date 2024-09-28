@@ -1,4 +1,4 @@
-### Project 1: A Few Unix Systems Utilities
+### A Few Unix Systems Utilities
 
 #### Project Statement: 
 Develop a few Unix systems utilities for process and filesystem management
